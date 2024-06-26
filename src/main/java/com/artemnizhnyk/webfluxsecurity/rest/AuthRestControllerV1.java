@@ -1,11 +1,11 @@
-package com.artemnizhnyk.rest;
+package com.artemnizhnyk.webfluxsecurity.rest;
 
+import com.artemnizhnyk.webfluxsecurity.service.UserService;
 import com.artemnizhnyk.webfluxsecurity.dto.AuthRequestDto;
 import com.artemnizhnyk.webfluxsecurity.dto.AuthResponseDto;
 import com.artemnizhnyk.webfluxsecurity.dto.UserDto;
 import com.artemnizhnyk.webfluxsecurity.entity.UserEntity;
 import com.artemnizhnyk.webfluxsecurity.mapper.UserMapper;
-import com.artemnizhnyk.webfluxsecurity.repository.UserRepository;
 import com.artemnizhnyk.webfluxsecurity.security.CustomPrincipal;
 import com.artemnizhnyk.webfluxsecurity.security.SecurityService;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +18,13 @@ import reactor.core.publisher.Mono;
 @RestController
 public class AuthRestControllerV1 {
     private final SecurityService securityService;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final UserMapper userMapper;
 
     @PostMapping("/register")
     public Mono<UserDto> register(@RequestBody UserDto dto) {
         UserEntity entity = userMapper.map(dto);
-        return userRepository.save(entity)
+        return userService.registerUser(entity)
                 .map(userMapper::map);
     }
 
@@ -45,7 +45,7 @@ public class AuthRestControllerV1 {
     public Mono<UserDto> getUserInfo(Authentication authentication) {
         CustomPrincipal customPrincipal = (CustomPrincipal) authentication.getPrincipal();
 
-        return userRepository.findById(customPrincipal.getId())
+        return userService.getUserById(customPrincipal.getId())
                 .map(userMapper::map);
     }
 }
