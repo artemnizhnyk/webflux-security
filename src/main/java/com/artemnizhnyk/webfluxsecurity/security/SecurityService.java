@@ -46,7 +46,7 @@ public class SecurityService {
 
     private TokenDetails generateToken(Date expirationDate, Map<String, Object> claims, String subject) {
         Date createdDate = new Date();
-        SecretKey secretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secret));
+        SecretKey secretKey = Keys.hmacShaKeyFor(Base64.getEncoder().encode(secret.getBytes()));
         String token = Jwts.builder()
                 .claims(claims)
                 .issuer(issuer)
