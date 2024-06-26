@@ -12,7 +12,7 @@ import java.util.Date;
 @Builder(toBuilder = true)
 @Data
 public class TokenDetails {
-    private Long id;
+    private Long userId;
     private String token;
     private Date issuedAt;
     private Date expiresAt;
