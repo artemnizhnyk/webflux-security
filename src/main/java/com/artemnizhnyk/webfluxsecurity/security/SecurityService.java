@@ -1,6 +1,7 @@
 package com.artemnizhnyk.webfluxsecurity.security;
 
 import com.artemnizhnyk.webfluxsecurity.entity.UserEntity;
+import com.artemnizhnyk.webfluxsecurity.exception.AuthException;
 import com.artemnizhnyk.webfluxsecurity.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -67,15 +68,15 @@ public class SecurityService {
         return userRepository.findByUsername(username)
                 .flatMap(user -> {
                     if (!user.isEnabled()) {
-                        return Mono.error(new RuntimeException(""));
+                        return Mono.error(new AuthException("Account disabled", "USER_ACCOUNT_DISABLED"));
                     }
                     if (!passwordEncoder.matches(password, user.getPassword())) {
-                        return Mono.error(new RuntimeException(""));
+                        return Mono.error(new AuthException("Invalid password", "INVALID_PASSWORD"));
                     }
                     return Mono.just(generateToken(user).toBuilder()
                                     .userId(user.getId())
                             .build());
                 })
-                .switchIfEmpty(Mono.error(new RuntimeException("")));
+                .switchIfEmpty(Mono.error(new AuthException("Invalid username", "INVALID_USERNAME")));
     }
 }
