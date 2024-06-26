@@ -34,6 +34,8 @@ dependencies {
     implementation "io.jsonwebtoken:jjwt:$jsonWebTokenVersion"
     implementation "jakarta.xml.bind:jakarta.xml.bind-api:$jakartaBindApiVersion"
 
+    compileOnly 'org.projectlombok:lombok'
+
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
 
